@@ -1,0 +1,25 @@
+# Set minimum iOS version
+platform :ios, '12.0'
+
+target 'Runner' do
+  # Use dynamic frameworks
+  use_frameworks!
+
+  # Pods for Runner
+
+  target 'RunnerTests' do
+    inherit! :search_paths
+    # Pods for testing
+  end
+end
+
+# Disable code signing for Flutter.framework (for simulator builds)
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    target.build_configurations.each do |config|
+      if target.name == 'Flutter'
+        config.build_settings['CODE_SIGNING_ALLOWED'] = 'NO'
+      end
+    end
+  end
+end
