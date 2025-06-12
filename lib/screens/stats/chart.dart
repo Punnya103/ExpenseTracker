@@ -29,7 +29,7 @@ class _PieChartSample2State extends State<PieChartSample2> {
     Colors.green,
     Colors.orange,
     const Color.fromARGB(255, 203, 157, 18),
-    const Color.fromARGB(255, 185, 255, 56),
+    const Color.fromARGB(255, 141, 168, 92),
     Colors.teal,
   ];
 
@@ -140,31 +140,25 @@ class _PieChartSample2State extends State<PieChartSample2> {
     );
   }
 
-  List<PieChartSectionData> showingSections() {
-    final total = categories.fold<double>(0, (sum, item) => sum + (item['total'] as num).toDouble());
+List<PieChartSectionData> showingSections() {
+  final total = categories.fold<double>(0, (sum, item) => sum + (item['total'] as num).toDouble());
 
-    return List.generate(categories.length, (i) {
-      final isTouched = i == touchedIndex;
-      final fontSize = isTouched ? 20.0 : 14.0;
-      final radius = isTouched ? 60.0 : 50.0;
-      final shadows = [const Shadow(color: Colors.black45, blurRadius: 2)];
+  return List.generate(categories.length, (i) {
+    final isTouched = i == touchedIndex;
+    final radius = isTouched ? 60.0 : 50.0;
 
-      final value = (categories[i]['total'] as num).toDouble();
-      final percent = ((value / total) * 100).toStringAsFixed(1);
+    final value = (categories[i]['total'] as num).toDouble();
 
-      return PieChartSectionData(
-        color: pieColors[i % pieColors.length],
-        value: value,
-        title: categories[i]['name'],
+    return PieChartSectionData(
+      color: pieColors[i % pieColors.length],
+      value: value,
+      title: '', // HIDE title text
+      radius: radius,
+      titleStyle: const TextStyle(
+        fontSize: 0, // No visible text
+      ),
+    );
+  });
+}
 
-        radius: radius,
-        titleStyle: TextStyle(
-          fontSize: fontSize,
-          fontWeight: FontWeight.bold,
-          color: Colors.white,
-          shadows: shadows,
-        ),
-      );
-    });
-  }
 }

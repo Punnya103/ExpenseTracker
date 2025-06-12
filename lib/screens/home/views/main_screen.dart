@@ -1,14 +1,15 @@
-import 'package:expensetracker/data/data.dart';
+import 'dart:convert';
+import 'dart:math';
+
 import 'package:expensetracker/screens/auth/login/views/login_screen.dart';
 import 'package:expensetracker/screens/profile/view/profile_screen.dart';
 import 'package:expensetracker/theme/theme_controller.dart';
 import 'package:expensetracker/widgets/primary_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'dart:math';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -21,10 +22,91 @@ class _MainScreenState extends State<MainScreen> {
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
   String? userName;
 
+  List<Map<String, dynamic>> expenses = [];
+  bool isLoading = true;
+  String? error;
+
+  String _formatDate(String isoDate) {
+    try {
+      final date = DateTime.parse(isoDate);
+      return '${date.day.toString().padLeft(2, '0')} '
+          '${_monthName(date.month)} ${date.year}';
+    } catch (e) {
+      return 'Invalid Date';
+    }
+  }
+
+  String _monthName(int month) {
+    const months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
+    return months[month - 1];
+  }
+
   @override
   void initState() {
     super.initState();
     _loadUsername();
+    fetchExpenses();
+  }
+
+  Future<void> _loadUsername() async {
+    final storedName = await _storage.read(key: 'username');
+    setState(() {
+      userName = storedName ?? 'User';
+    });
+  }
+
+  Future<void> fetchExpenses() async {
+    try {
+      final token = await _storage.read(key: 'auth_token');
+      if (token == null) {
+        setState(() {
+          error = 'No token found';
+          isLoading = false;
+        });
+        return;
+      }
+
+      final response = await http.get(
+        Uri.parse(
+          'https://expense-tracker-mean.onrender.com/expense/get-expense',
+        ),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      final data = jsonDecode(response.body);
+      if (response.statusCode == 200 && data['success']) {
+        setState(() {
+          expenses = List<Map<String, dynamic>>.from(data['data']['expenses']);
+          isLoading = false;
+        });
+      } else {
+        setState(() {
+          error = 'Failed to load expenses';
+          isLoading = false;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        error = 'Error: $e';
+        isLoading = false;
+      });
+    }
   }
 
   void showLogoutConfirmation() {
@@ -58,13 +140,6 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  Future<void> _loadUsername() async {
-    final storedName = await _storage.read(key: 'username');
-    setState(() {
-      userName = storedName ?? 'User';
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -72,6 +147,7 @@ class _MainScreenState extends State<MainScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 20.1, vertical: 10),
         child: Column(
           children: [
+            /// Header
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -118,7 +194,6 @@ class _MainScreenState extends State<MainScreen> {
                         ],
                       ),
                     ),
-
                     const SizedBox(width: 8),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -131,14 +206,12 @@ class _MainScreenState extends State<MainScreen> {
                             color: Theme.of(context).colorScheme.outline,
                           ),
                         ),
-                        Center(
-                          child: Text(
-                            'Welcome, ${userName ?? '...'}!',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Theme.of(context).colorScheme.outline,
-                            ),
+                        Text(
+                          'Welcome, ${userName ?? '...'}!',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).colorScheme.outline,
                           ),
                         ),
                       ],
@@ -167,6 +240,8 @@ class _MainScreenState extends State<MainScreen> {
                 ),
               ],
             ),
+
+            /// Banner / Balance Card
             Container(
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.width / 2,
@@ -189,8 +264,7 @@ class _MainScreenState extends State<MainScreen> {
                   ),
                 ],
               ),
-              child: Center(
-                child: Column(
+                    child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
@@ -246,7 +320,7 @@ class _MainScreenState extends State<MainScreen> {
                                   ),
                                 ),
                                 Text(
-                                  '\$ 2.500.000',
+                                  '\$ 2.500',
                                   style: TextStyle(
                                     color: Theme.of(
                                       context,
@@ -293,7 +367,7 @@ class _MainScreenState extends State<MainScreen> {
                                   ),
                                 ),
                                 Text(
-                                  '\$ 2.500.000',
+                                  '\$ 2.500',
                                   style: TextStyle(
                                     color: Theme.of(
                                       context,
@@ -311,9 +385,13 @@ class _MainScreenState extends State<MainScreen> {
                   ],
                 ),
               ),
-            ),
-            SizedBox(height: 20),
 
+
+            const SizedBox(height: 20),
+
+             
+            // const SizedBox(height: 20),
+            
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -335,101 +413,118 @@ class _MainScreenState extends State<MainScreen> {
                 ),
               ],
             ),
-            SizedBox(height: 20),
-            Expanded(
-              child: ListView.builder(
-                itemCount: transactionsData.length,
-                itemBuilder: (context, int i) {
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 16),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: context.watch<ThemeController>().isDarkMode
-                            ? const Color.fromRGBO(220, 217, 217, 0.1)
-                            : const Color.fromRGBO(255, 255, 255, 0.8),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
-                          children: [
-                            Row(
-                              children: [
-                                Stack(
-                                  alignment: Alignment.center,
-                                  children: [
-                                    Container(
-                                      width: 50,
-                                      height: 50,
-                                      decoration: BoxDecoration(
-                                        color: transactionsData[i]['color'],
-                                        shape: BoxShape.circle,
-                                      ),
+            const SizedBox(height: 20),
+
+            
+          Expanded(
+  child: isLoading
+      ? const Center(child: CircularProgressIndicator())
+      : error != null
+          ? Center(
+              child: Text(
+                error!,
+                style: const TextStyle(color: Colors.red),
+              ),
+            )
+          : ListView.builder(
+              itemCount: expenses.length,
+              itemBuilder: (context, i) {
+                final expense = expenses[i];
+                final isDark = context.watch<ThemeController>().isDarkMode;
+
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 16),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: isDark
+                          ? const Color.fromRGBO(220, 217, 217, 0.1)
+                          : const Color.fromRGBO(255, 255, 255, 0.8),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                       
+                          Row(
+                            children: [
+                              Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  Container(
+                                    width: 50,
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                      color: const Color.fromARGB(255, 50, 245, 56).withOpacity(0.2),
+                                      shape: BoxShape.circle,
                                     ),
-
-                                    FaIcon(
-                                      transactionsData[i]['icon'],
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.outlineVariant,
-                                      size: 20,
+                                  ),
+                                  const Icon(Icons.receipt_long)
+                                ],
+                              ),
+                              const SizedBox(width: 15),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    expense['name'] ?? 'No Name',
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Color.fromARGB(255, 165, 165, 165),
                                     ),
-                                  ],
-                                ),
-                                const SizedBox(width: 15),
-                                Text(
-                                  transactionsData[i]['name'],
-                                  style: TextStyle(
-                                    color: const Color.fromARGB(
-                                      255,
-                                      165,
-                                      165,
-                                      165,
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    '${expense['category']} • ${expense['paymentType']}',
+                                    style: TextStyle(
+                                      color: Theme.of(context).colorScheme.outline,
+                                      fontSize: 13,
                                     ),
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
                                   ),
-                                ),
-                              ],
-                            ),
+                                ],
+                              ),
+                            ],
+                          ),
 
-                            Column(
-                              children: [
-                                Text(
-                                  '-\$${transactionsData[i]['totalAmount'].toStringAsFixed(2)}',
-                                  style: const TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w400,
-                                  ),
+                         
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                '- ₹${expense['amount']}',
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
                                 ),
-
-                                Text(
-                                  transactionsData[i]['date'],
-
-                                  style: TextStyle(
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.outline,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                _formatDate(expense['expenseDate']),
+                                style: TextStyle(
+                                  color: Theme.of(context).colorScheme.outline,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
                                 ),
-                              ],
-                            ),
-                          ],
-                        ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
-                  );
-                },
-              ),
+                  ),
+                );
+              },
             ),
+),
+
           ],
         ),
       ),
     );
   }
 }
+

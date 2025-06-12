@@ -1,6 +1,5 @@
 import 'dart:math';
 import 'dart:ui';
-
 import 'package:expensetracker/screens/auth/repositories/auth_repository.dart';
 import 'package:expensetracker/screens/auth/login/blocs/login_bloc.dart';
 import 'package:flutter/material.dart';
@@ -73,17 +72,18 @@ class _LoginFormState extends State<LoginForm> {
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
+           
+                Theme.of(context).colorScheme.primary,
                 Theme.of(context).colorScheme.tertiary,
                 Theme.of(context).colorScheme.secondary,
-                Theme.of(context).colorScheme.primary,
-                Theme.of(context).colorScheme.primary,
+          
               ],
               transform: const GradientRotation(pi / 30),
             ),
           ),
           child: Stack(
             children: [
-              //  Top-left logo + woxtrack text
+              
               Positioned(
                 top: 60,
                 left: 20,
@@ -106,7 +106,7 @@ class _LoginFormState extends State<LoginForm> {
                 ),
               ),
 
-              //  Center login form
+             
               Center(
                 child: Padding(
                   padding: const EdgeInsets.all(32),

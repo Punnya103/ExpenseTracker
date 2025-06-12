@@ -43,7 +43,7 @@ flutter {
 }
 
 dependencies {
-    // ✅ Firebase BoM (Bill of Materials)
+
     implementation(platform("com.google.firebase:firebase-bom:33.15.0"))
 
     // ✅ Firebase SDKs you want to use (version is handled by BoM)

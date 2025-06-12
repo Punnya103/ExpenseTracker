@@ -1,8 +1,8 @@
-
-import 'package:expensetracker/screens/stats/chart.dart';
-import 'package:expensetracker/theme/theme_controller.dart';
-import 'package:flutter/cupertino.dart';
 import 'dart:math';
+import 'package:expensetracker/theme/theme_controller.dart';
+import 'package:expensetracker/widgets/expense_stats.dart';
+import 'package:expensetracker/widgets/income_stats.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -14,12 +14,12 @@ class StatScreen extends StatefulWidget {
 }
 
 class _StatScreenState extends State<StatScreen> {
-  int selectedIndex = 0; 
+  int selectedIndex = 0; // 0 = Income, 1 = Expenses
 
   @override
   Widget build(BuildContext context) {
     final outlineColor = Theme.of(context).colorScheme.outline;
-    final primaryColor = Theme.of(context).colorScheme.primary;
+    final themeController = Provider.of<ThemeController>(context);
 
     return SafeArea(
       child: Padding(
@@ -27,7 +27,7 @@ class _StatScreenState extends State<StatScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Top row with back button and title + settings icon
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -35,15 +35,13 @@ class _StatScreenState extends State<StatScreen> {
                   children: [
                     Container(
                       decoration: BoxDecoration(
-                        color:    Theme.of(context).colorScheme.background,
-                        // border: Border.all(
-                        //   color: Colors.grey.shade300,
-                        //   width: 1.5,
-                        // ),
+                        color: Theme.of(context).colorScheme.background,
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
                         icon: const Icon(CupertinoIcons.back),
                       ),
                     ),
@@ -53,8 +51,7 @@ class _StatScreenState extends State<StatScreen> {
                       style: TextStyle(
                         fontSize: 25,
                         fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.outline,
-
+                        color: outlineColor,
                       ),
                     ),
                   ],
@@ -68,10 +65,9 @@ class _StatScreenState extends State<StatScreen> {
                     border: Border.all(color: Colors.grey.shade300, width: 1.5),
                   ),
                   child: IconButton(
-                    onPressed: () =>
-                        context.read<ThemeController>().toggleTheme(),
+                    onPressed: () => themeController.toggleTheme(),
                     icon: Icon(
-                      context.watch<ThemeController>().isDarkMode
+                      themeController.isDarkMode
                           ? CupertinoIcons.sun_max_fill
                           : CupertinoIcons.moon_fill,
                       size: 18,
@@ -83,15 +79,13 @@ class _StatScreenState extends State<StatScreen> {
             ),
 
             const SizedBox(height: 20),
-
             Container(
               width: double.infinity,
-
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
-                color:   Theme.of(context).colorScheme.background,
+                color: Theme.of(context).colorScheme.background,
               ),
-              padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+              padding: const EdgeInsets.symmetric(vertical: 8),
               child: Row(
                 children: List.generate(2, (index) {
                   final isSelected = index == selectedIndex;
@@ -117,13 +111,19 @@ class _StatScreenState extends State<StatScreen> {
                                   transform: const GradientRotation(pi / 20),
                                 )
                               : null,
-                          color: isSelected ? null :  Theme.of(context).colorScheme.background,
+                          color: isSelected
+                              ? null
+                              : Theme.of(context).colorScheme.background,
                         ),
                         alignment: Alignment.center,
                         child: Text(
                           index == 0 ? 'Income' : 'Expenses',
                           style: TextStyle(
-                            color: isSelected ?  Theme.of(context).colorScheme.outlineVariant : outlineColor,
+                            color: isSelected
+                                ? Theme.of(context)
+                                    .colorScheme
+                                    .outlineVariant
+                                : outlineColor,
                             fontSize: 18,
                             fontWeight: FontWeight.w600,
                           ),
@@ -137,10 +137,11 @@ class _StatScreenState extends State<StatScreen> {
 
             const SizedBox(height: 20),
 
-            SizedBox(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.width,
-              child: PieChartSample2(),
+          
+            Expanded(
+              child: selectedIndex == 0
+                  ? const IncomeStatsWidget()
+                  : const ExpenseStatsWidget(),
             ),
           ],
         ),

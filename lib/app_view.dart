@@ -1,5 +1,6 @@
 
-import 'package:expensetracker/screens/home/views/home_screen.dart';
+import 'package:expensetracker/screens/SplashScreen/view/splash_screen.dart';
+
 import 'package:expensetracker/theme/theme_config.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -17,7 +18,7 @@ class MyAppView extends StatelessWidget {
       theme: lightTheme,
       darkTheme: darkTheme,
       themeMode: themeController.isDarkMode ? ThemeMode.dark : ThemeMode.light,
-      home: const HomeScreen(),
+      home: const SplashScreen(),
     );
   }
 }
