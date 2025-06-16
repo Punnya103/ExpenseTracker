@@ -207,7 +207,7 @@ class _MainScreenState extends State<MainScreen> {
                           ),
                         ),
                         Text(
-                          'Welcome, ${userName ?? '...'}!',
+                          ' ${userName ?? '...'}!',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -223,7 +223,7 @@ class _MainScreenState extends State<MainScreen> {
                   height: 40,
                   decoration: BoxDecoration(
                     color: Theme.of(context).colorScheme.outlineVariant,
-                    borderRadius: BorderRadius.circular(6),
+                    borderRadius: BorderRadius.circular(50),
                     border: Border.all(color: Colors.grey.shade300, width: 1.5),
                   ),
                   child: IconButton(
@@ -246,14 +246,13 @@ class _MainScreenState extends State<MainScreen> {
               height: MediaQuery.of(context).size.width / 2,
               margin: const EdgeInsets.only(top: 20),
               decoration: BoxDecoration(
-                gradient: const LinearGradient(
+                gradient: LinearGradient(
                   colors: [
-                    Color(0xFFEFEFEF),
-                    Color.fromARGB(255, 123, 123, 123),
+                    Theme.of(context).colorScheme.tertiary,
+                    Theme.of(context).colorScheme.secondary,
+                    Theme.of(context).colorScheme.primary,
                   ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  stops: [0.0, 1],
+                  transform: const GradientRotation(pi / 4),
                 ),
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(30),
@@ -289,10 +288,10 @@ class _MainScreenState extends State<MainScreen> {
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w700,
-                                color: Colors.black87,
+                                color: Color.fromARGB(221, 145, 145, 145),
                               ),
                             ),
-                            Icon(Icons.more_horiz, color: Colors.black54),
+                            Icon(Icons.more, color: Colors.black54),
                           ],
                         ),
                         const SizedBox(height: 6),
@@ -301,11 +300,11 @@ class _MainScreenState extends State<MainScreen> {
                           style: TextStyle(
                             fontSize: 32,
                             fontWeight: FontWeight.bold,
-                            color: Colors.black,
+                            color: Color.fromARGB(255, 198, 198, 198),
                           ),
                         ),
                         const Spacer(),
-                        // Income & Expense
+                        // Income & Expenser
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -326,7 +325,7 @@ class _MainScreenState extends State<MainScreen> {
                                     height: 28,
                                     decoration: const BoxDecoration(
                                       shape: BoxShape.circle,
-                                      color: Colors.white,
+                                      color: Color.fromARGB(255, 173, 164, 164),
                                     ),
                                     child: const Icon(
                                       CupertinoIcons.arrow_up,
@@ -342,7 +341,13 @@ class _MainScreenState extends State<MainScreen> {
                                       Text(
                                         'Income',
                                         style: TextStyle(
-                                          color: Colors.black54,
+                                          color: Color.fromARGB(
+                                            135,
+                                            207,
+                                            207,
+                                            207,
+                                          ),
+
                                           fontSize: 14,
                                         ),
                                       ),
@@ -377,7 +382,7 @@ class _MainScreenState extends State<MainScreen> {
                                     height: 28,
                                     decoration: const BoxDecoration(
                                       shape: BoxShape.circle,
-                                      color: Colors.white,
+                                      color: Color.fromARGB(255, 150, 150, 150),
                                     ),
                                     child: const Icon(
                                       CupertinoIcons.arrow_down,
@@ -393,14 +398,24 @@ class _MainScreenState extends State<MainScreen> {
                                       Text(
                                         'Expenses',
                                         style: TextStyle(
-                                          color: Colors.black54,
+                                          color: Color.fromARGB(
+                                            135,
+                                            207,
+                                            207,
+                                            207,
+                                          ),
                                           fontSize: 14,
                                         ),
                                       ),
                                       Text(
                                         '\$2,300',
                                         style: TextStyle(
-                                          color: Colors.red,
+                                          color: Color.fromARGB(
+                                            255,
+                                            162,
+                                            56,
+                                            49,
+                                          ),
                                           fontSize: 18,
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -469,7 +484,7 @@ class _MainScreenState extends State<MainScreen> {
                           child: Container(
                             decoration: BoxDecoration(
                               color: isDark
-                                  ? const Color.fromRGBO(220, 217, 217, 0.1)
+                                  ? const Color.fromARGB(84, 0, 0, 0)
                                   : const Color.fromRGBO(255, 255, 255, 0.8),
                               borderRadius: BorderRadius.circular(12),
                             ),
@@ -497,7 +512,9 @@ class _MainScreenState extends State<MainScreen> {
                                               shape: BoxShape.circle,
                                             ),
                                           ),
-                                          const Icon(Icons.receipt_long),
+                                          const Icon(
+                                            CupertinoIcons.shopping_cart,
+                                          ),
                                         ],
                                       ),
                                       const SizedBox(width: 15),
@@ -538,10 +555,22 @@ class _MainScreenState extends State<MainScreen> {
                                     children: [
                                       Text(
                                         '- ₹${expense['amount']}',
-                                        style: const TextStyle(
-                                          color: Colors.black,
+                                        style: TextStyle(
+                                          color: isDark
+                                              ? const Color.fromARGB(
+                                                  255,
+                                                  255,
+                                                  255,
+                                                  255,
+                                                )
+                                              : const Color.fromARGB(
+                                                  204,
+                                                  0,
+                                                  0,
+                                                  0,
+                                                ),
                                           fontSize: 16,
-                                          fontWeight: FontWeight.w400,
+                                          fontWeight: FontWeight.w700,
                                         ),
                                       ),
                                       const SizedBox(height: 4),

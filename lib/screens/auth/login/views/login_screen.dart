@@ -1,5 +1,6 @@
 import 'package:expensetracker/screens/auth/repositories/auth_repository.dart';
 import 'package:expensetracker/screens/auth/login/blocs/login_bloc.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:expensetracker/screens/auth/signin/views/signup_screen.dart';
@@ -154,7 +155,7 @@ class _LoginFormState extends State<LoginForm> {
                                     suffixIcon: IconButton(
                                       icon: Icon(
                                         _obscureText
-                                            ? Icons.visibility_off
+                                            ? CupertinoIcons.eye
                                             : Icons.visibility,
                                         color: Colors.white54,
                                       ),

@@ -47,7 +47,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 icon: Icon(CupertinoIcons.graph_square_fill),
                 label: 'Stats',
               ),
-              
             ],
           ),
         ),
