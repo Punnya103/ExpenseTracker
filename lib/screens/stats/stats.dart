@@ -14,7 +14,7 @@ class StatScreen extends StatefulWidget {
 }
 
 class _StatScreenState extends State<StatScreen> {
-  int selectedIndex = 0; // 0 = Income, 1 = Expenses
+  int selectedIndex = 1; 
 
   @override
   Widget build(BuildContext context) {

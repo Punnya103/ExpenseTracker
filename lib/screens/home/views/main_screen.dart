@@ -241,157 +241,187 @@ class _MainScreenState extends State<MainScreen> {
               ],
             ),
 
-            /// Banner / Balance Card
             Container(
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.width / 2,
               margin: const EdgeInsets.only(top: 20),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(30),
-                gradient: LinearGradient(
+                gradient: const LinearGradient(
                   colors: [
-                    Theme.of(context).colorScheme.primary,
-                    Theme.of(context).colorScheme.secondary,
-                    Theme.of(context).colorScheme.tertiary,
+                    Color(0xFFEFEFEF),
+                    Color.fromARGB(255, 123, 123, 123),
                   ],
-                  transform: const GradientRotation(pi / 4),
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  stops: [0.0, 1],
+                ),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(30),
+                  topRight: Radius.circular(30),
+                  bottomRight: Radius.circular(30),
+                  bottomLeft: Radius.circular(30),
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.4),
-                    blurRadius: 12,
-                    offset: const Offset(0, 6),
+                    color: Colors.black.withOpacity(0.5),
+                    blurRadius: 10,
+                    offset: const Offset(0, 5),
                   ),
                 ],
               ),
+
+              child: Stack(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 16,
+                    ),
                     child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Total Balance',
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.outlineVariant,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    Text(
-                      '\$ 4800.00',
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.outlineVariant,
-                        fontSize: 35,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        // Header row
                         Row(
-                          children: [
-                            Container(
-                              width: 30,
-                              height: 30,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Theme.of(
-                                  context,
-                                ).colorScheme.outlineVariant.withOpacity(0.2),
-                              ),
-                              child: const Icon(
-                                CupertinoIcons.arrow_up,
-                                color: Colors.green,
-                                size: 20,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: const [
+                            Text(
+                              'Total Balance',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.black87,
                               ),
                             ),
-                            const SizedBox(height: 4),
-                            const SizedBox(width: 10),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Income',
-                                  style: TextStyle(
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.outlineVariant,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
-                                Text(
-                                  '\$ 2.500',
-                                  style: TextStyle(
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.outlineVariant,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
+                            Icon(Icons.more_horiz, color: Colors.black54),
                           ],
                         ),
-
+                        const SizedBox(height: 6),
+                        const Text(
+                          '\$ 4,800.00',
+                          style: TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
+                        const Spacer(),
+                        // Income & Expense
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
+                            // Income
                             Container(
-                              width: 30,
-                              height: 30,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Theme.of(
-                                  context,
-                                ).colorScheme.outlineVariant.withOpacity(0.2),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 14,
+                                vertical: 10,
                               ),
-                              child: const Icon(
-                                CupertinoIcons.arrow_down,
-                                color: Colors.red,
-                                size: 20,
+                              decoration: BoxDecoration(
+                                // color: Colors.grey[300],
+                                borderRadius: BorderRadius.circular(14),
+                              ),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    width: 28,
+                                    height: 28,
+                                    decoration: const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.white,
+                                    ),
+                                    child: const Icon(
+                                      CupertinoIcons.arrow_up,
+                                      size: 16,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: const [
+                                      Text(
+                                        'Income',
+                                        style: TextStyle(
+                                          color: Colors.black54,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                      Text(
+                                        '\$2,500',
+                                        style: TextStyle(
+                                          color: Colors.green,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
                               ),
                             ),
-                            const SizedBox(height: 4),
-                            const SizedBox(width: 10),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Expenses',
-                                  style: TextStyle(
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.outlineVariant,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w400,
+
+                            // Expense
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 14,
+                                vertical: 10,
+                              ),
+                              decoration: BoxDecoration(
+                                // color: Colors.grey[300],
+                                borderRadius: BorderRadius.circular(14),
+                              ),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    width: 28,
+                                    height: 28,
+                                    decoration: const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.white,
+                                    ),
+                                    child: const Icon(
+                                      CupertinoIcons.arrow_down,
+                                      size: 16,
+                                      color: Colors.black,
+                                    ),
                                   ),
-                                ),
-                                Text(
-                                  '\$ 2.500',
-                                  style: TextStyle(
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.outlineVariant,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
+                                  const SizedBox(width: 12),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: const [
+                                      Text(
+                                        'Expenses',
+                                        style: TextStyle(
+                                          color: Colors.black54,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                      Text(
+                                        '\$2,300',
+                                        style: TextStyle(
+                                          color: Colors.red,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ],
                         ),
                       ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-
+            ),
 
             const SizedBox(height: 20),
 
-             
             // const SizedBox(height: 20),
-            
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -416,115 +446,128 @@ class _MainScreenState extends State<MainScreen> {
 
             const SizedBox(height: 20),
 
-            
-          Expanded(
-  child: isLoading
-      ? const Center(child: CircularProgressIndicator())
-      : error != null
-          ? Center(
-              child: Text(
-                error!,
-                style: const TextStyle(color: Colors.red),
-              ),
-            )
-          : ListView.builder(
-              itemCount: expenses.length,
-              itemBuilder: (context, i) {
-                final expense = expenses[i];
-                final isDark = context.watch<ThemeController>().isDarkMode;
-
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 16),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: isDark
-                          ? const Color.fromRGBO(220, 217, 217, 0.1)
-                          : const Color.fromRGBO(255, 255, 255, 0.8),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                       
-                          Row(
-                            children: [
-                              Stack(
-                                alignment: Alignment.center,
-                                children: [
-                                  Container(
-                                    width: 50,
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                      color: const Color.fromARGB(255, 50, 245, 56).withOpacity(0.2),
-                                      shape: BoxShape.circle,
-                                    ),
-                                  ),
-                                  const Icon(Icons.receipt_long)
-                                ],
-                              ),
-                              const SizedBox(width: 15),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    expense['name'] ?? 'No Name',
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: Color.fromARGB(255, 165, 165, 165),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    '${expense['category']} • ${expense['paymentType']}',
-                                    style: TextStyle(
-                                      color: Theme.of(context).colorScheme.outline,
-                                      fontSize: 13,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-
-                         
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Text(
-                                '- ₹${expense['amount']}',
-                                style: const TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                _formatDate(expense['expenseDate']),
-                                style: TextStyle(
-                                  color: Theme.of(context).colorScheme.outline,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
+            Expanded(
+              child: isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : error != null
+                  ? Center(
+                      child: Text(
+                        error!,
+                        style: const TextStyle(color: Colors.red),
                       ),
-                    ),
-                  ),
-                );
-              },
-            ),
-),
+                    )
+                  : ListView.builder(
+                      itemCount: expenses.length,
+                      itemBuilder: (context, i) {
+                        final expense = expenses[i];
+                        final isDark = context
+                            .watch<ThemeController>()
+                            .isDarkMode;
 
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 16),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: isDark
+                                  ? const Color.fromRGBO(220, 217, 217, 0.1)
+                                  : const Color.fromRGBO(255, 255, 255, 0.8),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Stack(
+                                        alignment: Alignment.center,
+                                        children: [
+                                          Container(
+                                            width: 50,
+                                            height: 50,
+                                            decoration: BoxDecoration(
+                                              color: const Color.fromARGB(
+                                                255,
+                                                50,
+                                                245,
+                                                56,
+                                              ).withOpacity(0.2),
+                                              shape: BoxShape.circle,
+                                            ),
+                                          ),
+                                          const Icon(Icons.receipt_long),
+                                        ],
+                                      ),
+                                      const SizedBox(width: 15),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            expense['name'] ?? 'No Name',
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                              color: Color.fromARGB(
+                                                255,
+                                                165,
+                                                165,
+                                                165,
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(height: 4),
+                                          Text(
+                                            '${expense['category']} • ${expense['paymentType']}',
+                                            style: TextStyle(
+                                              color: Theme.of(
+                                                context,
+                                              ).colorScheme.outline,
+                                              fontSize: 13,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                        '- ₹${expense['amount']}',
+                                        style: const TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        _formatDate(expense['expenseDate']),
+                                        style: TextStyle(
+                                          color: Theme.of(
+                                            context,
+                                          ).colorScheme.outline,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+            ),
           ],
         ),
       ),
     );
   }
 }
-

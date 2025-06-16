@@ -152,10 +152,10 @@ List<PieChartSectionData> showingSections() {
     return PieChartSectionData(
       color: pieColors[i % pieColors.length],
       value: value,
-      title: '', // HIDE title text
+      title: '',
       radius: radius,
       titleStyle: const TextStyle(
-        fontSize: 0, // No visible text
+        fontSize: 0,
       ),
     );
   });

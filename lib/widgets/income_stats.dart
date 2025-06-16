@@ -197,7 +197,9 @@ class _IncomeStatsWidgetState extends State<IncomeStatsWidget> {
                   ...incomeData.reversed.map((item) => ListTile(
                         leading: const Icon(Icons.money),
                         title: Text('${item['income']}'),
-                        subtitle: Text('${item['month']} - ${item['timestamp'].toString().split('T').first}'),
+                        // subtitle: Text('${item['month']} - ${item['timestamp'].toString().split('T').first}'),
+                        subtitle: Text('${item['month']}'),
+
                       )),
                 ],
               ),

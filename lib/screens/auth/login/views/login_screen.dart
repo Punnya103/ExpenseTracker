@@ -1,12 +1,9 @@
-import 'dart:math';
-import 'dart:ui';
 import 'package:expensetracker/screens/auth/repositories/auth_repository.dart';
 import 'package:expensetracker/screens/auth/login/blocs/login_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:expensetracker/screens/auth/signin/views/signup_screen.dart';
 import 'package:expensetracker/screens/home/views/home_screen.dart';
-import 'package:expensetracker/widgets/primary_button.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -32,6 +29,8 @@ class _LoginFormState extends State<LoginForm> {
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
+  bool _obscureText = true;
+
   void _onLoginPressed() {
     if (_formKey.currentState!.validate()) {
       context.read<LoginBloc>().add(
@@ -53,6 +52,7 @@ class _LoginFormState extends State<LoginForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFF1E1E1E),
       body: BlocListener<LoginBloc, LoginState>(
         listener: (context, state) {
           if (state is LoginSuccess) {
@@ -66,164 +66,204 @@ class _LoginFormState extends State<LoginForm> {
             );
           }
         },
-        child: Container(
-          width: double.infinity,
-          height: double.infinity,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-           
-                Theme.of(context).colorScheme.primary,
-                Theme.of(context).colorScheme.tertiary,
-                Theme.of(context).colorScheme.secondary,
-          
-              ],
-              transform: const GradientRotation(pi / 30),
-            ),
-          ),
-          child: Stack(
-            children: [
-              
-              Positioned(
-                top: 60,
-                left: 20,
-                child: Row(
-                  children: [
-                    Image.asset(
-                      'assets/images-removebg-preview.png',
-                      height: 50,
-                    ),
-                    const SizedBox(width: 10),
-                    const Text(
-                      'woxtrack',
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                        color: Color.fromARGB(255, 5, 151, 56),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+        child: SafeArea(
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return SingleChildScrollView(
+                padding: const EdgeInsets.all(24),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: constraints.maxHeight,
+                  ),
+                  child: IntrinsicHeight(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                 
+                        const SizedBox(height: 40),
 
-             
-              Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(32),
-                  child: SingleChildScrollView(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
-                      child: BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.08),
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(
-                              color: Colors.white.withOpacity(0.15),
+                        const Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "Hey,\nWelcome Back",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              height: 1.4,
                             ),
                           ),
-                          padding: const EdgeInsets.all(24),
-                          child: Form(
-                            key: _formKey,
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const Text(
-                                  "Login",
-                                  style: TextStyle(
-                                    fontSize: 32,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                        ),
+                        const SizedBox(height: 8),
+                        const Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "Login back to track your expense",
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.white70,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 40),
+
+                        // Form
+                        Form(
+                          key: _formKey,
+                          child: Column(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[850],
+                                  borderRadius: BorderRadius.circular(12),
                                 ),
-                                const SizedBox(height: 30),
-                                TextFormField(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 16),
+                                child: TextFormField(
                                   controller: _emailController,
                                   style: const TextStyle(color: Colors.white),
                                   decoration: const InputDecoration(
                                     labelText: 'Email',
                                     labelStyle:
                                         TextStyle(color: Colors.white70),
-                                    enabledBorder: UnderlineInputBorder(
-                                      borderSide:
-                                          BorderSide(color: Colors.white70),
-                                    ),
+                                    border: InputBorder.none,
                                   ),
-                                  validator: (value) => value == null ||
-                                          !value.contains('@')
-                                      ? 'Enter valid email'
-                                      : null,
+                                  validator: (value) =>
+                                      value == null || !value.contains('@')
+                                          ? 'Enter a valid email'
+                                          : null,
                                 ),
-                                const SizedBox(height: 20),
-                                TextFormField(
+                              ),
+                              const SizedBox(height: 20),
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[850],
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 16),
+                                child: TextFormField(
                                   controller: _passwordController,
-                                  obscureText: true,
+                                  obscureText: _obscureText,
                                   style: const TextStyle(color: Colors.white),
-                                  decoration: const InputDecoration(
+                                  decoration: InputDecoration(
                                     labelText: 'Password',
                                     labelStyle:
-                                        TextStyle(color: Colors.white70),
-                                    enabledBorder: UnderlineInputBorder(
-                                      borderSide:
-                                          BorderSide(color: Colors.white70),
+                                        const TextStyle(color: Colors.white70),
+                                    border: InputBorder.none,
+                                    suffixIcon: IconButton(
+                                      icon: Icon(
+                                        _obscureText
+                                            ? Icons.visibility_off
+                                            : Icons.visibility,
+                                        color: Colors.white54,
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          _obscureText = !_obscureText;
+                                        });
+                                      },
                                     ),
                                   ),
-                                  validator: (value) => value == null ||
-                                          value.length < 6
-                                      ? 'Password too short'
-                                      : null,
+                                  validator: (value) =>
+                                      value == null || value.length < 6
+                                          ? 'Password too short'
+                                          : null,
                                 ),
-                                const SizedBox(height: 30),
-                                BlocBuilder<LoginBloc, LoginState>(
-                                  builder: (context, state) {
-                                    return PrimaryButton(
-                                      onPressed: _onLoginPressed,
-                                      label: 'Login',
-                                      isLoading: state is LoginLoading,
-                                    );
-                                  },
+                              ),
+                              Container(
+                                width: double.infinity,
+                                padding:
+                                    const EdgeInsets.only(top: 8, right: 4),
+                                alignment: Alignment.centerRight,
+                                child: const Text(
+                                  'Forgot Password?',
+                                  style: TextStyle(
+                                    color: Colors.white60,
+                                    fontSize: 12,
+                                  ),
                                 ),
-                                const SizedBox(height: 20),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    const Text(
-                                      "Don't have an account? ",
-                                      style:
-                                          TextStyle(color: Colors.white70),
-                                    ),
-                                    GestureDetector(
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                const SignUpScreen(),
-                                          ),
-                                        );
-                                      },
-                                      child: const Text(
-                                        "Sign Up",
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          decoration: TextDecoration.underline,
+                              ),
+                              const SizedBox(height: 30),
+              BlocBuilder<LoginBloc, LoginState>(
+  builder: (context, state) {
+    if (state is LoginLoading) {
+      return const Center(
+        child: SizedBox(
+          width: 28,
+          height: 28,
+          child: CircularProgressIndicator(
+            strokeWidth: 3,
+            color: Color(0xFF84B42C),
+          ),
+        ),
+      );
+    }
+
+    return GestureDetector(
+      onTap: _onLoginPressed,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        decoration: BoxDecoration(
+          color: const Color(0xFF84B42C),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: const Center(
+          child: Text(
+            'Login',
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.black,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 0.5,
+            ),
+          ),
+        ),
+      ),
+    );
+  },
+),
+
+
+                              const SizedBox(height: 20),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Text(
+                                    "Don't have an account? ",
+                                    style: TextStyle(color: Colors.white70),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (_) =>
+                                              const SignUpScreen(),
                                         ),
+                                      );
+                                    },
+                                    child: const Text(
+                                      "Sign Up",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        decoration: TextDecoration.underline,
                                       ),
                                     ),
-                                  ],
-                                ),
-                              ],
-                            ),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
                         ),
-                      ),
+                      ],
                     ),
                   ),
                 ),
-              ),
-            ],
+              );
+            },
           ),
         ),
       ),

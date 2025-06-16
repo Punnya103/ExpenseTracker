@@ -4,113 +4,117 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:lottie/lottie.dart';
 
-class SplashScreen extends StatelessWidget {
+class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
-  Future<bool> checkLoginStatus() async {
-    const storage = FlutterSecureStorage();
-    final token = await storage.read(key: 'auth_token');
-    return token != null;
-  }
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
 
-  void handleStart(BuildContext context) async {
-    final isLoggedIn = await checkLoginStatus();
-    if (isLoggedIn) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const HomeScreen()),
-      );
-    } else {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const LoginScreen()),
-      );
-    }
+class _SplashScreenState extends State<SplashScreen> {
+  final _storage = const FlutterSecureStorage();
+
+  Future<void> handleStart() async {
+    final token = await _storage.read(key: 'auth_token');
+    final isLoggedIn = token != null;
+
+    if (!mounted) return;
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (_) => isLoggedIn ? const HomeScreen() : const LoginScreen(),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context).colorScheme;
-
     return Scaffold(
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [theme.primary, theme.secondary, theme.tertiary],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              /// Lottie animation
-              Lottie.network(
-                'https://assets4.lottiefiles.com/packages/lf20_w51pcehl.json',
-                height: 250,
+      backgroundColor: const Color(0xFF191919), 
+      body: Column(
+        children: [
+          Expanded(
+            flex: 2,
+            child: Center(
+              child: Lottie.asset(
+                'assets/Animation - 1749810127182.json',
+                height: 350,
                 fit: BoxFit.contain,
               ),
-              const SizedBox(height: 30),
-
-              /// App Title
-              const Text(
-                'Always track control',
-                style: TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const Text(
-                'of your Finances',
-                style: TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-                textAlign: TextAlign.center,
-              ),
-
-              const SizedBox(height: 40),
-
-           
-              GestureDetector(
-                onTap: () => handleStart(context),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 100, vertical: 16),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [theme.primary, theme.secondary, theme.tertiary],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.3),
-                        blurRadius: 8,
-                        offset: const Offset(2, 4),
-                      ),
-                    ],
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+              decoration: BoxDecoration(
+                color: const Color(0xFF1E1E1E), 
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.white.withOpacity(0.1),
+                    blurRadius: 12,
+                    spreadRadius: 2,
+                    offset: const Offset(0, -16), 
                   ),
-                  child: const Text(
-                    'Let\'s Get Started',
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Text(
+                    'Track your expenses\nSave smarter every day',
+                    textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: 18,
+                      fontSize: 20,
                       color: Colors.white,
                       fontWeight: FontWeight.w600,
+                      height: 1.3,
                     ),
                   ),
-                ),
+                  const SizedBox(height: 10),
+                  const Text(
+                    'Analyze where your money goes,\nand stay financially ahead.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.white70,
+                      height: 1.4,
+                    ),
+                  ),
+                  const Spacer(),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 30),
+                    child: GestureDetector(
+                      onTap: handleStart,
+                      child: Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF84B42C),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: const Center(
+                          child: Text(
+                            'Get Started',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 0.5,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
